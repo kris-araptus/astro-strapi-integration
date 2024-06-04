@@ -3,36 +3,35 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
 import fetchApi from '../lib/strapi';
 import type Article from '../interfaces/article';
 
 const articles = await fetchApi<Article[]>({
-  endpoint: 'articles', // the content type to fetch
-  wrappedByKey: 'data', // the key to unwrap the response
+  endpoint: 'articles?populate=image',
+  wrappedByKey: 'data',
 });
 ---
----
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<ul>
-				{
-				  articles.map((article) => (
-					<li>
-					  <a href={`/blog/${article.attributes.slug}/`}>
-						{article.attributes.title}
-					  </a>
-					</li>
-				  ))
-				}
-			  </ul>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <title>Strapi & Astro</title>
+  </head>
+
+  <body>
+    <main>
+      <ul>
+        {
+          articles.map((article) => (
+            <li>
+              <a href={`/blog/${article.attributes.slug}/`}>
+                {article.attributes.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </main>
+  </body>
 </html>
