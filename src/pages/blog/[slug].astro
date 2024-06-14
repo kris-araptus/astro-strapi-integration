@@ -13,11 +13,25 @@ export async function getStaticPaths() {
     props: article,
   }));
 }
+
 type Props = Article;
 
 const article = Astro.props;
----
+const contentBlocks = article.attributes.content;
 
+// Function to render content block as HTML string
+function renderContentBlock(block) {
+  if (block.type === 'paragraph') {
+    return `<p>${block.children.map(renderContentBlock).join('')}</p>`;
+  } else if (block.type === 'text') {
+    return block.text;
+  } else {
+    return '';
+  }
+}
+
+const contentHTML = contentBlocks.map(renderContentBlock).join('');
+---
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,18 +41,8 @@ const article = Astro.props;
 
   <body>
     <main>
-      <img src={import.meta.env.STRAPI_URL + article.attributes.image.data.attributes.url} />
-
       <h1>{article.attributes.title}</h1>
-
-      <!-- Render plain text -->
-      <p>{article.attributes.content}</p>
-      <!-- Render markdown -->
-      <MyMarkdownComponent>
-        {article.attributes.content}
-      </MyMarkdownComponent>
-      <!-- Render html -->
-      <Fragment set:html={article.attributes.content} />
+      <div set:html={contentHTML}></div>
     </main>
   </body>
 </html>
