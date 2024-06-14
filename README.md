@@ -1,8 +1,3 @@
-Sure! Here's an updated version of your README file to reflect the integration of Astro and Strapi:
-Astro-Strapi Integration
-
-sh
-
 npm create astro@latest -- --template blog
 
 Open in StackBlitz
